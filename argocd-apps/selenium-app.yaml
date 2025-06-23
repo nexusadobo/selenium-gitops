@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: git://localhost/
+    repoURL: https://github.com/nexusadobo/selenium-gitops
     targetRevision: HEAD
     path: apps/selenium-grid
     helm:
