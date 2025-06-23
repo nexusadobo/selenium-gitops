@@ -7,5 +7,5 @@ appVersion: "4.15.0"
 
 dependencies:
   - name: selenium-grid
-    version: "0.25.1"
+    version: "4.33.0-20250606"
     repository: "https://www.selenium.dev/docker-selenium"

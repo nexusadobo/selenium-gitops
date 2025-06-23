@@ -22,4 +22,13 @@ Este proyecto despliega un entorno de Selenium Grid en Kubernetes utilizando Hel
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 kubectl wait --for=condition=available --timeout=300s deployment/argocd-server -n argocd
+
+kubectl port-forward svc/argocd-server -n argocd 8080:443 &
+ubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+```
+
+
+### 2. Instalar selenium grid
+```sh
+kubectl apply -f argocd-apps/selenium-app.yaml
 ```

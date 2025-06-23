@@ -1,7 +1,7 @@
 # values.yaml
 selenium-grid:
   hub:
-    serviceType: ClusterIP
+    serviceType: NodePort
     resources:
       requests:
         memory: "300Mi"
