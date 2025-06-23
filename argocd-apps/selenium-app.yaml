@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: selenium-grid
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git://localhost/
+    targetRevision: HEAD
+    path: apps/selenium-grid
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: selenium
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
