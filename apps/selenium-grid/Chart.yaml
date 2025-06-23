@@ -2,10 +2,10 @@ apiVersion: v2
 name: selenium-grid
 description: Selenium Grid for testing automation
 type: application
-version: 0.1.0
-appVersion: "4.15.0"
+version: 0.44.2
+appVersion: 4.33.0-20250606
 
-dependencies:
-  - name: selenium-grid
-    version: "4.33.0-20250606"
-    repository: "https://www.selenium.dev/docker-selenium"
+# dependencies:
+#   - name: selenium-grid
+#     version: "0.25.1"
+#     repository: "https://www.selenium.dev/docker-selenium"
