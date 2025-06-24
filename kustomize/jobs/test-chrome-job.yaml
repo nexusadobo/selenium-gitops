@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: test-chrome-job
+  labels:
+    app: selenium-test
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: selenium-test
+          image: seleniarm/python:3.11-selenium
+          command: ["python"]
+          args:
+            - "-c"
+            - |
+              from selenium import webdriver
+              from selenium.webdriver.common.by import By
+              from selenium.webdriver.chrome.options import Options
+              import time
+
+              options = Options()
+              options.add_argument('--no-sandbox')
+              options.add_argument('--disable-dev-shm-usage')
+              driver = webdriver.Remote(
+                  command_executor="http://selenium-hub:4444/wd/hub",
+                  options=options
+              )
+              driver.get("https://www.google.com")
+              assert "Google" in driver.title
+              driver.quit()
+              print("✅ Prueba completada con éxito.")
