@@ -11,7 +11,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: selenium-test
-          image: seleniarm/python:3.11-selenium
+          image: umihico/aws-lambda-selenium-python:3.11.6-selenium4.14.0-chrome119.0.6045.105
           command: ["python"]
           args:
             - "-c"
