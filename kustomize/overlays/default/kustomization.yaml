@@ -3,5 +3,6 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - ../../jobs/test-chrome-job.yaml
 
 
