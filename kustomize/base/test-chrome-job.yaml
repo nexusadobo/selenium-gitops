@@ -9,7 +9,7 @@ spec:
   completions: 1
   parallelism: 1
   backoffLimit: 3
-  ttlSecondsAfterFinished: 120    # Limpiar después de 2 minuto
+  ttlSecondsAfterFinished: 300  # Limpiar después de 5 minutos
 
   template:
     metadata:
@@ -25,9 +25,11 @@ spec:
         # Variables de entorno
         env:
         - name: HUB_URL
-          value: "http://selenium-hub:4444/wd/hub"  # Ajusta según tu hub
+          value: "http://selenium-hub:4444/wd/hub"  # Service interno
         - name: TEST_URL
           value: "https://www.google.com"
+        - name: HUB_STATUS_URL
+          value: "http://selenium-hub:4444/status"
         
         # Comando a ejecutar
         command: ["/bin/bash"]
@@ -37,10 +39,27 @@ spec:
           echo "Instalando dependencias..."
           pip install selenium pytest requests
           
+          echo "Verificando conectividad al hub..."
+          HUB_STATUS_URL="${HUB_URL%/wd/hub}/status"
+          echo "Probando conectividad a: $HUB_STATUS_URL"
+          
+          if curl -f "$HUB_STATUS_URL" 2>/dev/null; then
+            echo "✅ Hub accesible"
+            curl -s "$HUB_STATUS_URL" | head -20
+          else
+            echo "❌ No se puede conectar al hub"
+            echo "Intentando resolución DNS..."
+            nslookup selenium-hub || echo "Error DNS"
+            echo "Probando conectividad básica..."
+            nc -zv selenium-hub 4444 || echo "Puerto no accesible"
+            exit 1
+          fi
+          
           echo "Creando script de prueba..."
           cat > test_simple.py << 'EOF'
           import os
           import time
+          import requests
           from selenium import webdriver
           from selenium.webdriver.common.by import By
           from selenium.webdriver.support.ui import WebDriverWait
@@ -50,25 +69,67 @@ spec:
           def test_google_search():
               print("Iniciando prueba...")
               
-              # Configurar opciones de Chrome
-              chrome_options = ChromeOptions()
-              chrome_options.add_argument('--headless')  # Sin interfaz gráfica
-              chrome_options.add_argument('--no-sandbox')
-              chrome_options.add_argument('--disable-dev-shm-usage')
-              chrome_options.add_argument('--disable-gpu')
-              chrome_options.add_argument('--window-size=1920,1080')
-              
               # URL del hub
               hub_url = os.getenv('HUB_URL', 'http://localhost:4444/wd/hub')
               test_url = os.getenv('TEST_URL', 'https://www.google.com')
               
+              print(f"Hub URL: {hub_url}")
+              
+              # Verificar estado del hub primero
+              status_url = hub_url.replace('/wd/hub', '/status')
+              print(f"Verificando estado del hub: {status_url}")
+              
+              try:
+                  response = requests.get(status_url, timeout=10)
+                  status = response.json()
+                  print(f"Estado del hub: {status.get('value', {}).get('ready', 'unknown')}")
+                  
+                  # Mostrar nodos disponibles
+                  nodes = status.get('value', {}).get('nodes', [])
+                  print(f"Nodos disponibles: {len(nodes)}")
+                  for i, node in enumerate(nodes):
+                      print(f"  Nodo {i+1}: {node.get('stereotypes', 'N/A')}")
+                      
+              except Exception as e:
+                  print(f"Error verificando hub: {e}")
+                  return
+              
+              # Configurar opciones de Chrome con menos restricciones
+              chrome_options = ChromeOptions()
+              chrome_options.add_argument('--no-sandbox')
+              chrome_options.add_argument('--disable-dev-shm-usage')
+              chrome_options.add_argument('--disable-gpu')
+              chrome_options.add_argument('--remote-debugging-port=9222')
+              chrome_options.add_argument('--window-size=1920,1080')
+              # Remover --headless para debug
+              
               print(f"Conectando a hub: {hub_url}")
               
-              # Crear driver remoto (Selenium 4 syntax)
-              driver = webdriver.Remote(
-                  command_executor=hub_url,
-                  options=chrome_options
-              )
+              try:
+                  # Crear driver remoto con timeout mayor
+                  print("Creando sesión remota...")
+                  driver = webdriver.Remote(
+                      command_executor=hub_url,
+                      options=chrome_options,
+                      keep_alive=True
+                  )
+                  
+                  print(f"✅ Sesión creada exitosamente")
+                  print(f"Session ID: {driver.session_id}")
+                  print(f"Capabilities: {driver.capabilities.get('browserName', 'unknown')}")
+                  
+              except Exception as e:
+                  print(f"❌ Error creando sesión: {str(e)}")
+                  print("Verificando nuevamente el estado del hub...")
+                  try:
+                      response = requests.get(status_url, timeout=5)
+                      print(f"Hub status code: {response.status_code}")
+                      if response.status_code == 200:
+                          status_data = response.json()
+                          print(f"Hub ready: {status_data.get('value', {}).get('ready', False)}")
+                  except Exception as status_error:
+                      print(f"Error verificando hub: {status_error}")
+                  raise
               
               try:
                   print(f"Navegando a: {test_url}")
