@@ -5,5 +5,5 @@ resources:
   - selenium-hub-deployment.yaml
   - selenium-hub-service.yaml
   - chrome-node-deployment.yaml
-  - test-chrome-job.yaml
+  # - test-chrome-job.yaml
   
