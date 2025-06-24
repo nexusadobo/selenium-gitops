@@ -1,27 +1,26 @@
-hub:
-  replicas: 1
-  resources:
-    requests:
-      cpu: "100m"
-      memory: "256Mi"
-    limits:
-      cpu: "250m"
-      memory: "512Mi"
+chromeNode:
+  enabled: false
 
-chrome:
+firefoxNode:
+  enabled: false
+
+edgeNode:
   enabled: true
   replicas: 1
   resources:
-    requests:
-      cpu: "200m"
-      memory: "512Mi"
     limits:
       cpu: "500m"
-      memory: "1Gi"
+      memory: "512Mi"
+    requests:
+      cpu: "250m"
+      memory: "256Mi"
 
-autoscaling:
-  enabled: false
-
-# Recomendado para evitar conflictos con Argo CD (hooks de Helm)
-patchObjectFinalizers:
-  enabled: false
+# Opcional: Limita recursos del hub/grid si lo deseas
+hub:
+  resources:
+    limits:
+      cpu: "250m"
+      memory: "256Mi"
+    requests:
+      cpu: "100m"
+      memory: "128Mi"

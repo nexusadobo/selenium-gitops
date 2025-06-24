@@ -6,12 +6,12 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/nexusadobo/selenium-gitops
-    path: charts/selenium-grid
-    targetRevision: HEAD
+    repoURL: https://www.selenium.dev/docker-selenium
+    chart: selenium-grid
+    targetRevision: 0.44.2
     helm:
       valueFiles:
-        - values.yaml
+        -  charts/selenium-grid/values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: selenium
