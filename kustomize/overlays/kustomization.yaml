@@ -4,6 +4,4 @@ kind: Kustomization
 resources:
   - ../../base
 
-# Ejemplo de parche para reducir recursos aún más (opcional)
-patchesStrategicMerge:
-  - patch-node-resources.yaml
+
