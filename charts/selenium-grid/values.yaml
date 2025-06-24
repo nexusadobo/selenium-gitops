@@ -1,0 +1,27 @@
+hub:
+  replicas: 1
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "250m"
+      memory: "512Mi"
+
+chrome:
+  enabled: true
+  replicas: 1
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "512Mi"
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
+
+autoscaling:
+  enabled: false
+
+# Recomendado para evitar conflictos con Argo CD (hooks de Helm)
+patchObjectFinalizers:
+  enabled: false
