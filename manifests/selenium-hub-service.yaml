@@ -5,10 +5,11 @@ metadata:
   labels:
     app: selenium-hub
 spec:
-  type: ClusterIP
+  type: NodePort   # antes: ClusterIP
   ports:
     - port: 4444
       targetPort: 4444
+      nodePort: 30444  # puerto explícito, opcional
       protocol: TCP
   selector:
     app: selenium-hub
