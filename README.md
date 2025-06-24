@@ -10,13 +10,28 @@ Este repositorio contiene ejemplos prácticos para desplegar un cluster de **Sel
 
 ```text
 selenium-gitops/
+├── README.md
 ├── charts/
-│   └── selenium-grid/             # Helm Chart
+│   └── selenium-grid/              
+│       ├── Chart.yaml
+│       ├── templates/
+│       └── values.yaml             
+│
 ├── kustomize/
-│   ├── base/                      # Manifiestos base para Kustomize
+│   ├── base/
+│   │   ├── hub-deployment.yaml
+│   │   ├── hub-service.yaml
+│   │   ├── chrome-node.yaml       
+│   │   └── kustomization.yaml
 │   └── overlays/
-│       └── default/               # Overlays para personalizaciones
-└── manifests/                     # YAML puro
+│       └── default/
+│           ├── kustomization.yaml  
+│
+└── manifests/                      
+    ├── selenium-hub-deployment.yaml
+    ├── selenium-hub-service.yaml
+    ├── chrome-node-deployment.yaml 
+    └── argocd-app.yaml             
 ```
 
 ## 🚀 Pre-requisitos
