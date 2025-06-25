@@ -1,37 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: selenium-devops
+  name: selenium-hub-helm
   namespace: argocd
 spec:
-  destination:
-    namespace: 'selenium'
-    server: 'https://kubernetes.default.svc'
-  source:
-    path: charts/selenium-grid
-    repoURL: https://github.com/SeleniumHQ/docker-selenium
-    targetRevision: HEAD
-    helm:
-      parameters:
-        - name: chromeNode.resources.limits.cpu
-          value: 500m
-        - name: chromeNode.resources.limits.memory
-          value: 512Mi
-        - name: chromeNode.resources.requests.cpu
-          value: 250m
-        - name: chromeNode.resources.requests.memory
-          value: 256Mi
-        - name: edgeNode.enabled
-          value: 'false'
-        - name: firefoxNode.enabled
-          value: 'false'
-        - name: hub.serviceType
-          value: NodePort
-  sources: []
   project: default
+  source:
+    repoURL: https://github.com/nexusadobo/selenium-gitops
+    path: charts/selenium-grid
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: selenium
   syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true  
