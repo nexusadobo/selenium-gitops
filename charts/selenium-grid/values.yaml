@@ -1008,11 +1008,11 @@ monitoring:
 # Keda scaled object configuration
 autoscaling:
   # -- Enable autoscaling. Implies installing KEDA
-  enabled: false
+  enabled: true
   # -- Enable autoscaling without automatically installing KEDA
   enableWithExistingKEDA: false
   # -- Which type of KEDA scaling to use: job or deployment
-  scalingType: job
+  scalingType: deployment
   # -- Force remove replicas in deployment spec in case ArgoCD with AutoSync enabled will try to resolve back to desired state
   setReplicasInSpec: true
   # -- Specify an external KEDA TriggerAuthentication resource is used for scaler triggers config. Apply for all browser nodes
@@ -1069,11 +1069,11 @@ autoscaling:
   scaledOptions:
     # Don't define `triggers` config here, it will apply the same to all node types. Instead, define it under `scaledOptions` of different node type
     # -- Minimum number of replicas
-    minReplicaCount: 0
+    minReplicaCount: 1
     # -- Maximum number of replicas
-    maxReplicaCount: 24
+    maxReplicaCount: 4
     # -- Polling interval in seconds
-    pollingInterval: 20
+    pollingInterval: 10
     # List of triggers. Be careful, the default trigger of selenium-grid will be overwritten if you specify this
     # triggers:
   # Options for KEDA ScaledJobs (only used when scalingType is set to "job"). See https://keda.sh/docs/latest/concepts/scaling-jobs/#scaledjob-spec
