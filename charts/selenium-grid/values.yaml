@@ -855,7 +855,7 @@ hub:
   # -- Selenium Hub port
   port: 4444
   # -- Selenium Hub expose NodePort
-  nodePort: 31444
+  nodePort: 30444
   # -- Startup probe settings
   startupProbe:
     enabled: true
