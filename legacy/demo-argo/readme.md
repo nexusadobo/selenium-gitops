@@ -22,6 +22,19 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
   
 ```
 
+## Instalar ArgoCD Using a Helm Chart
+```sh
+helm repo add argo https://argoproj.github.io/argo-helm
+
+helm install argocd-demo argo/argo-cd -f argocd-custom-values.yaml
+
+# argocd-custom-values.yaml
+server:
+  service:
+    type: NodePort
+kubectl get pods -n argocd    
+  
+```
 ## Crear una aplicación de ejemplo
 ```sh
 
