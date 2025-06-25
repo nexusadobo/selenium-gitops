@@ -912,17 +912,17 @@ hub:
   # -- Resources for selenium-hub container
   resources:
     requests:
-      cpu: "300m"
-      memory: "512Mi"
-    limits:
-      cpu: "600m"
+      cpu: "0.5"
       memory: "1Gi"
+    limits:
+      cpu: "1"
+      memory: "2Gi"
   # -- Number of replicas
   replicas: 1
   # -- SecurityContext for selenium-hub container
   securityContext: {}
   # -- Kubernetes service type (see https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types)
-  serviceType: NodePort
+  serviceType: ClusterIP
   # -- Set specific clusterIP when serviceType is ClusterIP (see https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip)
   clusterIP: ""
   # -- Set specific externalName when serviceType is ExternalName (see https://kubernetes.io/docs/concepts/services-networking/service/#type-externalname)
@@ -1169,12 +1169,12 @@ chromeNode:
   resources:
     # -- Request resources for chrome-node pods
     requests:
-      memory: "800Mi"
-      cpu: "400m"
+      memory: "1Gi"
+      cpu: "1"
     # -- Limit resources for chrome-node pods
     limits:
-      memory: "1200Mi"
-      cpu: "800m"
+      memory: "2Gi"
+      cpu: "1"
   # -- SecurityContext for chrome-node container
   securityContext: {}
   # -- Tolerations for chrome-node pods
@@ -1320,7 +1320,7 @@ chromeNode:
 # Configuration for firefox nodes
 firefoxNode:
   # -- Enable firefox nodes
-  enabled: false
+  enabled: true
 
   # -- NOTE: Only used when autoscaling.enabled is false
   # Enable creation of Deployment
@@ -1516,7 +1516,7 @@ firefoxNode:
 # Configuration for edge nodes
 edgeNode:
   # -- Enable edge nodes
-  enabled: false
+  enabled: true
 
   # -- NOTE: Only used when autoscaling.enabled is false
   # Enable creation of Deployment
